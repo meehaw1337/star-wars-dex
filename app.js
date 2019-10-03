@@ -8,6 +8,8 @@ app.use(express.json())
 const API_PATH = '/api'
 const PORT = 3001
 
+
+// Routes
 app.get(API_PATH + '/hero/:id', (req, res) => {
     console.log('Request received: GET at ' + API_PATH + '/hero/' + req.params.id)
 
@@ -23,7 +25,7 @@ app.post(API_PATH + '/hero/', (req, res) => {
         affiliation: req.body.affiliation,
         description: req.body.description
     })
-    
+
     hero.save().then(hero => {
         console.log('Hero: ' + hero.name + ' saved!')
         res.send(req.body)
@@ -34,7 +36,7 @@ app.post(API_PATH + '/hero/', (req, res) => {
 
 
 // Database connection
-mongoose.connect('mongodb+srv://obiwan:kenobi@cluster0-syyyg.mongodb.net/admin?retryWrites=true&w=majority',
+mongoose.connect('mongodb://obiwan:kenobi@cluster0-shard-00-00-syyyg.mongodb.net:27017,cluster0-shard-00-01-syyyg.mongodb.net:27017,cluster0-shard-00-02-syyyg.mongodb.net:27017/starwarsdex_db?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true',
     { useNewUrlParser: true, useUnifiedTopology: true },
     () => { console.log('Database connection established') })
 
