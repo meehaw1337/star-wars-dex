@@ -13,7 +13,13 @@ const PORT = 3001
 app.get(API_PATH + '/hero/:id', (req, res) => {
     console.log('Request received: GET at ' + API_PATH + '/hero/' + req.params.id)
 
-    res.send('Hero with id: ' + req.params.id + ' requested!')
+    Hero.findById(req.params.id, (err, hero) => {
+        if(err) {
+            res.send({error: err})
+        } else {
+            res.send(hero)
+        }
+    })
 })
 
 app.post(API_PATH + '/hero/', (req, res) => {
@@ -26,11 +32,12 @@ app.post(API_PATH + '/hero/', (req, res) => {
         description: req.body.description
     })
 
-    hero.save().then(hero => {
-        console.log('Hero: ' + hero.name + ' saved!')
-        res.send(req.body)
-    }).catch(err => {
-        res.send({message: err})
+    hero.save((err, result) => {
+        if(err) {
+            res.send({error: err})
+        } else {
+            res.send(result._id)
+        }
     })
 })
 
@@ -42,7 +49,8 @@ mongoose.connect('mongodb://obiwan:kenobi@cluster0-shard-00-00-syyyg.mongodb.net
 
 
 app.listen(PORT, () => {
-    console.log('App up and running, listening on port ' + PORT + '. Press CTRL+C to terminate the app.')
+    console.log('App up and running, listening on port ' + PORT)
+    console.log('Press CTRL+C to terminate the app')
 })
 
 
