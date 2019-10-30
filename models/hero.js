@@ -1,13 +1,10 @@
 const mongoose = require('mongoose')
 
 const heroSchema = mongoose.Schema({
-    id: {
-        type: Number,
-        required: false
-    },
     name: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     origin: {
         type: String

@@ -11,7 +11,7 @@ const PORT = 3001
 
 // Routes
 app.get(API_PATH + '/hero/:id', (req, res) => {
-    console.log('Request received: GET at ' + API_PATH + '/hero/' + req.params.id)
+    console.log(new Date().toLocaleString() + '  Request received: GET at ' + API_PATH + '/hero/' + req.params.id)
 
     Hero.findById(req.params.id, (err, hero) => {
         if(err) {
@@ -22,8 +22,20 @@ app.get(API_PATH + '/hero/:id', (req, res) => {
     })
 })
 
+app.get(API_PATH + '/heroes', (req, res) => {
+    console.log(new Date().toLocaleString() + '  Request received: GET at ' + API_PATH + '/heroes')
+
+    Hero.find({}, (err, heroes) => {
+        if(err) {
+            res.send({error: err})
+        } else {
+            res.send(heroes)
+        }
+    })
+})
+
 app.post(API_PATH + '/hero/', (req, res) => {
-    console.log('Request received: POST at ' + API_PATH + '/hero/, body: ', req.body)
+    console.log(new Date().toLocaleString() + '  Request received: POST at ' + API_PATH + '/hero/, body: ', req.body)
 
     const hero = new Hero({
         name: req.body.name,
