@@ -1,58 +1,19 @@
 const express = require('express')
 const mongoose = require('mongoose')
-const Hero = require('./models/hero')
+const verify = require('./middlewares/auth')
+
+const heroesRoute = require('./routes/heroes')
+const usersRoute = require('./routes/users')
 
 const app = express()
 app.use(express.json())
 
-const API_PATH = '/api'
 const PORT = 3001
-
+const API_PATH = '/api'
 
 // Routes
-app.get(API_PATH + '/hero/:id', (req, res) => {
-    console.log(new Date().toLocaleString() + '  Request received: GET at ' + API_PATH + '/hero/' + req.params.id)
-
-    Hero.findById(req.params.id, (err, hero) => {
-        if(err) {
-            res.send({error: err})
-        } else {
-            res.send(hero)
-        }
-    })
-})
-
-app.get(API_PATH + '/heroes', (req, res) => {
-    console.log(new Date().toLocaleString() + '  Request received: GET at ' + API_PATH + '/heroes')
-
-    Hero.find({}, (err, heroes) => {
-        if(err) {
-            res.send({error: err})
-        } else {
-            res.send(heroes)
-        }
-    })
-})
-
-app.post(API_PATH + '/hero/', (req, res) => {
-    console.log(new Date().toLocaleString() + '  Request received: POST at ' + API_PATH + '/hero/, body: ', req.body)
-
-    const hero = new Hero({
-        name: req.body.name,
-        origin: req.body.origin,
-        affiliation: req.body.affiliation,
-        description: req.body.description
-    })
-
-    hero.save((err, result) => {
-        if(err) {
-            res.send({error: err})
-        } else {
-            res.send(result._id)
-        }
-    })
-})
-
+app.use(API_PATH + '/hero', verify, heroesRoute)
+app.use(API_PATH + '/user', usersRoute)
 
 // Database connection
 mongoose.connect('mongodb://obiwan:kenobi@cluster0-shard-00-00-syyyg.mongodb.net:27017,cluster0-shard-00-01-syyyg.mongodb.net:27017,cluster0-shard-00-02-syyyg.mongodb.net:27017/starwarsdex_db?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true',
